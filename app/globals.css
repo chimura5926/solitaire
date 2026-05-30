@@ -1,0 +1,46 @@
+:root {
+  --felt-dark: #0a3d2e;
+  --felt: #0f5132;
+  --felt-light: #157347;
+  --gold: #d4af37;
+  --card-bg: #fdfcf7;
+  --card-border: #c9c4b5;
+  --red: #c8102e;
+  --black: #1a1a1a;
+  --card-back: #6b1f2a;
+  --slot: rgba(255, 255, 255, 0.08);
+  --shadow: rgba(0, 0, 0, 0.35);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  font-family: "Georgia", "Times New Roman", serif;
+  background:
+    radial-gradient(ellipse at 50% 0%, var(--felt-light) 0%, var(--felt) 45%, var(--felt-dark) 100%);
+  background-attachment: fixed;
+  color: #fff;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* テーブルの織り目テクスチャ */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(45deg, rgba(0, 0, 0, 0.03) 0 2px, transparent 2px 4px),
+    repeating-linear-gradient(-45deg, rgba(0, 0, 0, 0.03) 0 2px, transparent 2px 4px);
+  pointer-events: none;
+  z-index: 0;
+}
