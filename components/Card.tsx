@@ -33,25 +33,18 @@ export default function Card({
       onDoubleClick={onDoubleClick}
       style={onPointerDown ? { touchAction: "none", userSelect: "none" } : undefined}
     >
-      {/* 左上：数字（大きく太字）+ スート */}
+      {/* 左上：数字のみ */}
       <div className="corner top-left">
         <span className="rank">{label}</span>
-        <span className="suit-small">{symbol}</span>
       </div>
 
-      {/* 右上：スート */}
+      {/* 右上：スート（数字と同サイズ） */}
       <div className="corner top-right">
-        <span className="suit-small">{symbol}</span>
+        <span className="rank">{symbol}</span>
       </div>
 
       {/* 中央：大きいスート */}
       <div className="pip">{symbol}</div>
-
-      {/* 右下：逆さ数字（重なったとき下から読める） */}
-      <div className="corner bottom-right">
-        <span className="rank">{label}</span>
-        <span className="suit-small">{symbol}</span>
-      </div>
 
       <style jsx>{`
         .card {
@@ -94,19 +87,9 @@ export default function Card({
           right: 5px;
           align-items: center;
         }
-        .bottom-right {
-          bottom: 4px;
-          right: 5px;
-          transform: rotate(180deg);
-        }
-
         .rank {
-          font-size: calc(var(--card-w, 70px) * 0.30);
+          font-size: calc(var(--card-w, 70px) * 0.38);
           font-weight: 900;
-          line-height: 1;
-        }
-        .suit-small {
-          font-size: calc(var(--card-w, 70px) * 0.22);
           line-height: 1;
         }
         .pip {
