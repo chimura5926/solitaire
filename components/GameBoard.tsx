@@ -82,36 +82,58 @@ export default function GameBoard() {
       const st = stateRef.current;
       if (!st) return;
 
-      // Find drop target by walking up DOM from the point
-      const el = document.elementFromPoint(e.clientX, e.clientY);
-      let node: Element | null = el;
-      while (node && node !== document.body) {
-        const colAttr = node.getAttribute("data-drop-col");
-        if (colAttr !== null) {
-          const toCol = parseInt(colAttr);
-          let next: GameState | null = null;
-          if (drag.info.source === "waste") {
-            next = moveWasteToTableau(st, toCol);
-          } else {
-            next = moveTableauToTableau(st, drag.info.col, drag.info.cardIndex, toCol);
+      const x = e.clientX;
+      const y = e.clientY;
+
+      // 矩形の最近傍距離（内側なら 0）
+      const distToRect = (rect: DOMRect): number => {
+        const dx = Math.max(rect.left - x, 0, x - rect.right);
+        const dy = Math.max(rect.top - y, 0, y - rect.bottom);
+        return Math.hypot(dx, dy);
+      };
+
+      // 全ドロップゾーンから最も近いものを選ぶ（閾値 100px）
+      const MAX_DIST = 100;
+      let bestEl: Element | null = null;
+      let bestDist = MAX_DIST + 1;
+
+      document
+        .querySelectorAll("[data-drop-col], [data-drop-foundation]")
+        .forEach((el) => {
+          const d = distToRect(el.getBoundingClientRect());
+          if (d < bestDist) {
+            bestDist = d;
+            bestEl = el;
           }
-          if (next) setState(next);
-          return;
+        });
+
+      if (!bestEl) return;
+
+      const colAttr = (bestEl as Element).getAttribute("data-drop-col");
+      if (colAttr !== null) {
+        const toCol = parseInt(colAttr);
+        let next: GameState | null = null;
+        if (drag.info.source === "waste") {
+          next = moveWasteToTableau(st, toCol);
+        } else {
+          next = moveTableauToTableau(st, drag.info.col, drag.info.cardIndex, toCol);
         }
-        if (node.hasAttribute("data-drop-foundation")) {
-          let next: GameState | null = null;
-          if (drag.info.source === "waste") {
-            next = moveWasteToFoundation(st);
-          } else {
-            const col = st.tableau[drag.info.col];
-            if (drag.info.cardIndex === col.length - 1) {
-              next = moveTableauToFoundation(st, drag.info.col);
-            }
+        if (next) setState(next);
+        return;
+      }
+
+      if ((bestEl as Element).hasAttribute("data-drop-foundation")) {
+        let next: GameState | null = null;
+        if (drag.info.source === "waste") {
+          next = moveWasteToFoundation(st);
+        } else {
+          const col = st.tableau[drag.info.col];
+          if (drag.info.cardIndex === col.length - 1) {
+            next = moveTableauToFoundation(st, drag.info.col);
           }
-          if (next) setState(next);
-          return;
         }
-        node = node.parentElement;
+        if (next) setState(next);
+        return;
       }
     };
 
@@ -265,6 +287,9 @@ export default function GameBoard() {
             key={colIndex}
             className="column"
             data-drop-col={colIndex}
+            style={col.length > 1
+              ? { height: `${(col.length - 1) * 36 + 110}px` }
+              : undefined}
           >
             {col.length === 0 && <div className="slot empty" />}
             {col.map((card, cardIndex) => (
