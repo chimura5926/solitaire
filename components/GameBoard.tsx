@@ -115,11 +115,19 @@ export default function GameBoard() {
       }
     };
 
+    const onCancel = () => {
+      activeDragRef.current = null;
+      setGhostPos(null);
+      setDragCards([]);
+    };
+
     document.addEventListener("pointermove", onMove);
     document.addEventListener("pointerup", onUp);
+    document.addEventListener("pointercancel", onCancel);
     return () => {
       document.removeEventListener("pointermove", onMove);
       document.removeEventListener("pointerup", onUp);
+      document.removeEventListener("pointercancel", onCancel);
     };
   }, []);
 
@@ -143,8 +151,11 @@ export default function GameBoard() {
   const handleWastePointerDown = (e: React.PointerEvent) => {
     const top = state.waste[state.waste.length - 1];
     if (!top) return;
-    e.preventDefault();
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    // e.preventDefault() は iOS Safari で後続の pointermove を止めるため呼ばない。
+    // スクロール抑制は touch-action: none CSS で行う。
+    const el = e.currentTarget as HTMLElement;
+    el.setPointerCapture(e.pointerId); // 指が素早く動いてもイベントを取りこぼさない
+    const rect = el.getBoundingClientRect();
     activeDragRef.current = {
       info: { source: "waste" },
       cards: [top],
@@ -164,8 +175,9 @@ export default function GameBoard() {
     const column = state.tableau[col];
     const card = column[cardIndex];
     if (!card.faceUp) return;
-    e.preventDefault();
-    const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    const el = e.currentTarget as HTMLElement;
+    el.setPointerCapture(e.pointerId);
+    const rect = el.getBoundingClientRect();
     const cards = column.slice(cardIndex);
     activeDragRef.current = {
       info: { source: "tableau", col, cardIndex },
