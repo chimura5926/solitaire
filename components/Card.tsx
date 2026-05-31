@@ -33,20 +33,30 @@ export default function Card({
       onDoubleClick={onDoubleClick}
       style={onPointerDown ? { touchAction: "none", userSelect: "none" } : undefined}
     >
-      <div className="corner top">
+      {/* 左上：数字（大きく太字）+ スート */}
+      <div className="corner top-left">
         <span className="rank">{label}</span>
-        <span className="suit">{symbol}</span>
+        <span className="suit-small">{symbol}</span>
       </div>
+
+      {/* 右上：スート */}
+      <div className="corner top-right">
+        <span className="suit-small">{symbol}</span>
+      </div>
+
+      {/* 中央：大きいスート */}
       <div className="pip">{symbol}</div>
-      <div className="corner bottom">
+
+      {/* 右下：逆さ数字（重なったとき下から読める） */}
+      <div className="corner bottom-right">
         <span className="rank">{label}</span>
-        <span className="suit">{symbol}</span>
+        <span className="suit-small">{symbol}</span>
       </div>
 
       <style jsx>{`
         .card {
-          width: var(--card-w, 80px);
-          height: var(--card-h, 112px);
+          width: var(--card-w, 70px);
+          height: var(--card-h, 98px);
           border-radius: 8px;
           position: relative;
           user-select: none;
@@ -65,34 +75,39 @@ export default function Card({
           outline: 2px solid var(--gold);
           outline-offset: -2px;
         }
-        .red {
-          color: var(--red);
-        }
-        .black {
-          color: var(--black);
-        }
+        .red { color: var(--red); }
+        .black { color: var(--black); }
+
         .corner {
           position: absolute;
           display: flex;
           flex-direction: column;
           align-items: center;
-          line-height: 1;
-          font-weight: bold;
+          line-height: 1.1;
         }
-        .corner.top {
-          top: 5px;
-          left: 6px;
+        .top-left {
+          top: 4px;
+          left: 5px;
         }
-        .corner.bottom {
-          bottom: 5px;
-          right: 6px;
+        .top-right {
+          top: 4px;
+          right: 5px;
+          align-items: center;
+        }
+        .bottom-right {
+          bottom: 4px;
+          right: 5px;
           transform: rotate(180deg);
         }
+
         .rank {
-          font-size: calc(var(--card-w, 80px) * 0.22);
+          font-size: calc(var(--card-w, 70px) * 0.30);
+          font-weight: 900;
+          line-height: 1;
         }
-        .suit {
-          font-size: calc(var(--card-w, 80px) * 0.2);
+        .suit-small {
+          font-size: calc(var(--card-w, 70px) * 0.22);
+          line-height: 1;
         }
         .pip {
           position: absolute;
@@ -100,8 +115,9 @@ export default function Card({
           display: flex;
           align-items: center;
           justify-content: center;
-          font-size: calc(var(--card-w, 80px) * 0.5);
-          opacity: 0.92;
+          font-size: calc(var(--card-w, 70px) * 0.52);
+          opacity: 0.88;
+          pointer-events: none;
         }
       `}</style>
     </div>
