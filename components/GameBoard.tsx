@@ -199,7 +199,7 @@ export default function GameBoard() {
   return (
     <div className="board">
       <header className="hud">
-        <h1>Klondike</h1>
+        <h1>ちむソリティア</h1>
         <div className="stats">
           <span>手数: {state.moves}</span>
           <button
