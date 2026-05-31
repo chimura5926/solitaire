@@ -22,7 +22,7 @@ html {
   height: 100%;
   overflow: hidden;
   touch-action: none;
-  /* iOS Safari のバウンススクロールを対策 */
+  /* iOS Safari のバウンススクロール対策 */
   overscroll-behavior: none;
 }
 
