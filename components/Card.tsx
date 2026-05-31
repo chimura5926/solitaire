@@ -4,21 +4,17 @@ import { Card as CardType, SUIT_SYMBOL, cardColor, rankLabel } from "@/lib/cards
 
 interface CardProps {
   card: CardType;
-  // ドラッグ開始ハンドラ（場所情報を渡す）
-  onDragStart?: (e: React.DragEvent) => void;
+  onPointerDown?: (e: React.PointerEvent) => void;
   onClick?: () => void;
   onDoubleClick?: () => void;
-  // 重なり表示用のオフセット指定はラッパー側で行う
-  draggable?: boolean;
   selected?: boolean;
 }
 
 export default function Card({
   card,
-  onDragStart,
+  onPointerDown,
   onClick,
   onDoubleClick,
-  draggable = false,
   selected = false,
 }: CardProps) {
   if (!card.faceUp) {
@@ -32,10 +28,10 @@ export default function Card({
   return (
     <div
       className={`card card-face ${color} ${selected ? "selected" : ""}`}
-      draggable={draggable}
-      onDragStart={onDragStart}
+      onPointerDown={onPointerDown}
       onClick={onClick}
       onDoubleClick={onDoubleClick}
+      style={onPointerDown ? { touchAction: "none", userSelect: "none" } : undefined}
     >
       <div className="corner top">
         <span className="rank">{label}</span>

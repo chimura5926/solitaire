@@ -82,6 +82,23 @@ export function moveTableauToFoundation(
   return finalize(next);
 }
 
+// 自動補完可能か判定：山札が空 かつ 場札がすべて表向き
+export function canAutoComplete(state: GameState): boolean {
+  if (state.stock.length > 0) return false;
+  return state.tableau.every((col) => col.every((card) => card.faceUp));
+}
+
+// 自動補完の1ステップ：組札に送れるカードを1枚送る
+export function autoCompleteStep(state: GameState): GameState | null {
+  const fromWaste = moveWasteToFoundation(state);
+  if (fromWaste) return fromWaste;
+  for (let col = 0; col < state.tableau.length; col++) {
+    const result = moveTableauToFoundation(state, col);
+    if (result) return result;
+  }
+  return null;
+}
+
 // 組札から場札へ戻す（任意ルール）
 export function moveFoundationToTableau(
   state: GameState,

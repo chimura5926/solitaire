@@ -33,6 +33,14 @@ body {
   overflow-x: hidden;
 }
 
+/* スマホ向けカードサイズ調整 */
+@media (max-width: 480px) {
+  :root {
+    --card-w-mobile: clamp(38px, 12vw, 56px);
+    --card-h-mobile: calc(var(--card-w-mobile) * 1.4);
+  }
+}
+
 /* テーブルの織り目テクスチャ */
 body::before {
   content: "";
