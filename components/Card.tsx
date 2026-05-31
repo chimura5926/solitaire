@@ -38,11 +38,6 @@ export default function Card({
         <span className="rank">{label}</span>
       </div>
 
-      {/* 右上：スート（数字と同サイズ） */}
-      <div className="corner top-right">
-        <span className="rank">{symbol}</span>
-      </div>
-
       {/* 中央：大きいスート */}
       <div className="pip">{symbol}</div>
 
@@ -82,13 +77,8 @@ export default function Card({
           top: 4px;
           left: 5px;
         }
-        .top-right {
-          top: 4px;
-          right: 5px;
-          align-items: center;
-        }
         .rank {
-          font-size: calc(var(--card-w, 70px) * 0.38);
+          font-size: calc(var(--card-w, 70px) * 0.52);
           font-weight: 900;
           line-height: 1;
         }
