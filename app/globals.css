@@ -21,6 +21,8 @@
 html,
 body {
   height: 100%;
+  overflow: hidden;
+  touch-action: none;
 }
 
 body {
@@ -30,7 +32,6 @@ body {
   background-attachment: fixed;
   color: #fff;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
 /* スマホ向けカードサイズ調整 */
