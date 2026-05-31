@@ -88,6 +88,7 @@ export default function Card({
           display: flex;
           align-items: center;
           justify-content: center;
+          padding-top: 18%;
           font-size: calc(var(--card-w, 70px) * 0.72);
           opacity: 0.88;
           pointer-events: none;

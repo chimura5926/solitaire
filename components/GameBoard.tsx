@@ -271,7 +271,7 @@ export default function GameBoard() {
               <div
                 key={card.id}
                 className="stacked"
-                style={{ top: `${cardIndex * 26}px` }}
+                style={{ top: `${cardIndex * 36}px` }}
               >
                 <Card
                   card={card}
@@ -303,7 +303,7 @@ export default function GameBoard() {
               key={card.id}
               style={{
                 position: i === 0 ? "relative" : "absolute",
-                top: i === 0 ? 0 : `${i * 26}px`,
+                top: i === 0 ? 0 : `${i * 36}px`,
                 left: 0,
               }}
             >
