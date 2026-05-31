@@ -93,7 +93,7 @@ export default function GameBoard() {
       };
 
       // 全ドロップゾーンから最も近いものを選ぶ（閾値 100px）
-      const MAX_DIST = 100;
+      const MAX_DIST = 200;
       let bestEl: Element | null = null;
       let bestDist = MAX_DIST + 1;
 
@@ -288,7 +288,7 @@ export default function GameBoard() {
             className="column"
             data-drop-col={colIndex}
             style={col.length > 1
-              ? { height: `${(col.length - 1) * 36 + 110}px` }
+              ? { height: `${(col.length - 1) * 26 + 110}px` }
               : undefined}
           >
             {col.length === 0 && <div className="slot empty" />}
@@ -296,7 +296,7 @@ export default function GameBoard() {
               <div
                 key={card.id}
                 className="stacked"
-                style={{ top: `${cardIndex * 36}px` }}
+                style={{ top: `${cardIndex * 26}px` }}
               >
                 <Card
                   card={card}
@@ -328,7 +328,7 @@ export default function GameBoard() {
               key={card.id}
               style={{
                 position: i === 0 ? "relative" : "absolute",
-                top: i === 0 ? 0 : `${i * 36}px`,
+                top: i === 0 ? 0 : `${i * 26}px`,
                 left: 0,
               }}
             >
