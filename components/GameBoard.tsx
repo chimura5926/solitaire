@@ -308,13 +308,16 @@ export default function GameBoard() {
           max-width: 1000px;
           margin: 0 auto;
           padding: 12px 10px 60px;
-          --card-w: 80px;
-          --card-h: 112px;
+          --card-w: 70px;
+          --card-h: 98px;
+          /* ボード全体でスクロールをブロックしてドラッグを優先させる */
+          touch-action: none;
         }
-        @media (max-width: 480px) {
+        @media (max-width: 520px) {
           .board {
             padding: 8px 4px 40px;
-            --card-w: clamp(38px, 12vw, 56px);
+            /* 7列 × card-w + 6gaps × 4px + 8px padding = 100vw を解くと card-w = (100vw - 32px) / 7 */
+            --card-w: calc((100vw - 32px) / 7);
             --card-h: calc(var(--card-w) * 1.4);
           }
           .tableau {
@@ -438,6 +441,7 @@ export default function GameBoard() {
           position: absolute;
           left: 0;
           width: 100%;
+          touch-action: none;
         }
         .empty {
           width: 100%;
