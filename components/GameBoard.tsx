@@ -92,37 +92,29 @@ export default function GameBoard() {
         return Math.hypot(dx, dy);
       };
 
-      // 全ドロップゾーンから最も近いものを選ぶ（閾値 100px）
-      const MAX_DIST = 200;
-      let bestEl: Element | null = null;
-      let bestDist = MAX_DIST + 1;
+      // ① 組札: 横 500px・縦 200px の矩形トレランスで先に判定
+      const tryFoundationDrop = (): boolean => {
+        const TOLE_X = 500;
+        const TOLE_Y = 200;
+        let bestFoundation: Element | null = null;
+        let bestFoundationDist = Infinity;
 
-      document
-        .querySelectorAll("[data-drop-col], [data-drop-foundation]")
-        .forEach((el) => {
-          const d = distToRect(el.getBoundingClientRect());
-          if (d < bestDist) {
-            bestDist = d;
-            bestEl = el;
+        document.querySelectorAll("[data-drop-foundation]").forEach((el) => {
+          const r = el.getBoundingClientRect();
+          if (
+            x >= r.left - TOLE_X && x <= r.right + TOLE_X &&
+            y >= r.top  - TOLE_Y && y <= r.bottom + TOLE_Y
+          ) {
+            const d = distToRect(r);
+            if (d < bestFoundationDist) {
+              bestFoundationDist = d;
+              bestFoundation = el;
+            }
           }
         });
 
-      if (!bestEl) return;
+        if (!bestFoundation) return false;
 
-      const colAttr = (bestEl as Element).getAttribute("data-drop-col");
-      if (colAttr !== null) {
-        const toCol = parseInt(colAttr);
-        let next: GameState | null = null;
-        if (drag.info.source === "waste") {
-          next = moveWasteToTableau(st, toCol);
-        } else {
-          next = moveTableauToTableau(st, drag.info.col, drag.info.cardIndex, toCol);
-        }
-        if (next) setState(next);
-        return;
-      }
-
-      if ((bestEl as Element).hasAttribute("data-drop-foundation")) {
         let next: GameState | null = null;
         if (drag.info.source === "waste") {
           next = moveWasteToFoundation(st);
@@ -132,9 +124,35 @@ export default function GameBoard() {
             next = moveTableauToFoundation(st, drag.info.col);
           }
         }
-        if (next) setState(next);
-        return;
+        if (next) { setState(next); return true; }
+        return false;
+      };
+
+      if (tryFoundationDrop()) return;
+
+      // ② 場札: 最近傍の列を選ぶ（閾値 200px）
+      const MAX_DIST = 200;
+      let bestCol: Element | null = null;
+      let bestColDist = MAX_DIST + 1;
+
+      document.querySelectorAll("[data-drop-col]").forEach((el) => {
+        const d = distToRect(el.getBoundingClientRect());
+        if (d < bestColDist) {
+          bestColDist = d;
+          bestCol = el;
+        }
+      });
+
+      if (!bestCol) return;
+
+      const toCol = parseInt((bestCol as Element).getAttribute("data-drop-col")!);
+      let next: GameState | null = null;
+      if (drag.info.source === "waste") {
+        next = moveWasteToTableau(st, toCol);
+      } else {
+        next = moveTableauToTableau(st, drag.info.col, drag.info.cardIndex, toCol);
       }
+      if (next) setState(next);
     };
 
     const onCancel = () => {
